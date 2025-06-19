@@ -15,14 +15,12 @@ export const TaskList = ({ tasks, onEdit, onDelete }: TaskListProps) => {
   return (
     <ul className="space-y-4">
       {tasks.map((task, index) => (
-        <li key={index} className="p-4 border rounded-lg shadow-sm space-y-2">
           <TaskItem
             key={index}
             task={task}
             onEdit={() => onEdit(index)}
             onDelete={() => onDelete(index)}
           />
-        </li>
       ))}
     </ul>
   );
