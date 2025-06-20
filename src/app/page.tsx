@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TaskForm } from "@/components/task/TaskForm";
 import { TaskList } from "@/components/task/TaskList";
 import { Task } from "@/lib/validation/task";
+import { UserNav } from "@/components/ui/login";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -78,6 +79,7 @@ export default function Home() {
 
   return (
     <main className="max-w-xl mx-auto p-6">
+      <UserNav />
       <h1 className="text-2xl font-bold mb-4">La tua To-Do List</h1>
 
       <TaskForm
