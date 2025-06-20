@@ -16,7 +16,7 @@ import {
 const taskSchema = z.object({
   title: z.string().min(1, "Il titolo è obbligatorio"),
   description: z.string().optional(),
-  status: z.enum(["pending", "in progress", "done"]),
+  status: z.enum(["PENDING", "IN_PROGRESS", "DONE"])
 });
 
 export type Task = z.infer<typeof taskSchema>;
@@ -37,7 +37,7 @@ export const TaskForm = ({
   const [formData, setFormData] = useState<Task>({
     title: "",
     description: "",
-    status: "pending",
+    status: "PENDING",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Task, string>>>({});
@@ -74,7 +74,7 @@ export const TaskForm = ({
       onAddTask(result.data);
     }
 
-    setFormData({ title: "", description: "", status: "pending" });
+    setFormData({ title: "", description: "", status: "PENDING" });
     setErrors({});
   };
 
@@ -101,9 +101,9 @@ export const TaskForm = ({
           <SelectValue placeholder="Stato" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="pending">In attesa</SelectItem>
-          <SelectItem value="in progress">In corso</SelectItem>
-          <SelectItem value="done">Completato</SelectItem>
+          <SelectItem value="PENDING">In attesa</SelectItem>
+          <SelectItem value="IN_PROGRESS">In corso</SelectItem>
+          <SelectItem value="DONE">Completato</SelectItem>
         </SelectContent>
       </Select>
 

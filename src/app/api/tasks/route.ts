@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import {prisma} from "@/lib/prisma";
 import { z } from "zod";
 
 const taskSchema = z.object({
@@ -28,6 +28,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newTask, { status: 201 });
   } catch (error) {
+    console.log("🚀 ~ POST ~ error:", error)
     return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
 }
@@ -49,6 +50,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(updatedTask);
   } catch (error) {
+    console.log("🚀 ~ PUT ~ error:", error)
     return NextResponse.json({ error: "Update failed" }, { status: 400 });
   }
 }
@@ -66,6 +68,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.log("🚀 ~ DELETE ~ error:", error)
     return NextResponse.json({ error: "Delete failed" }, { status: 400 });
   }
 }

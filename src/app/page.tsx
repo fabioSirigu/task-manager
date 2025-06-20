@@ -1,16 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TaskForm, Task } from "@/components/task/TaskForm"
 import { TaskList } from "@/components/task/TaskList"
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
-
-  const handleAddTask = (task: Task) => {
-    setTasks((prev) => [...prev, task])
+  const loadTasks = async () => {
+    const res = await fetch("/api/tasks")
+    const data = await res.json()
+    setTasks(data)
   }
+  useEffect(() => {
+    loadTasks()
+  }, [])
+
+  const handleAddTask = async (task: Omit<Task, "id">) => {
+  const res = await fetch("/api/tasks", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(task),
+  })
+
+  if (res.ok) {
+    const newTask = await res.json()
+    setTasks((prev) => [...prev, newTask])
+  }
+}
 
   const handleUpdateTask = (updatedTask: Task) => {
     if (editingIndex === null) return
