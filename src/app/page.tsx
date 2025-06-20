@@ -1,33 +1,80 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { TaskForm, Task } from "@/components/task/TaskForm"
-import { TaskList } from "@/components/task/TaskList"
+import { useEffect, useState } from "react";
+import { TaskForm } from "@/components/task/TaskForm";
+import { TaskList } from "@/components/task/TaskList";
+import { Task } from "@/lib/validation/task";
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [editingIndex, setEditingIndex] = useState<number | null>(null)
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  useEffect(() => {
+    loadTasks();
+  }, []);
 
-  const handleAddTask = (task: Task) => {
-    setTasks((prev) => [...prev, task])
-  }
+  const loadTasks = async () => {
+    const res = await fetch("/api/tasks");
+    const data = await res.json();
+    setTasks(data);
+  };
 
-  const handleUpdateTask = (updatedTask: Task) => {
-    if (editingIndex === null) return
-    setTasks((prev) =>
-      prev.map((task, i) => (i === editingIndex ? updatedTask : task))
-    )
-    setEditingIndex(null)
-  }
+  const handleAddTask = async (task: Omit<Task, "id">) => {
+    const res = await fetch("/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
+    });
+
+    if (res.ok) {
+      const newTask = await res.json();
+      setTasks((prev) => [...prev, newTask]);
+    } else {
+      const err = await res.json();
+      console.error("Errore POST:", err);
+    }
+  };
+
+  const handleUpdateTask = async (updatedTask: Task) => {
+    if (editingIndex === null) return;
+    const id = tasks[editingIndex].id;
+
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    });
+
+    if (res.ok) {
+      const saved = await res.json();
+      setTasks((prev) =>
+        prev.map((task, i) => (i === editingIndex ? saved : task))
+      );
+      setEditingIndex(null);
+    } else {
+      console.error("Errore durante l’aggiornamento", await res.json());
+    }
+  };
 
   const handleEdit = (index: number) => {
-    setEditingIndex(index)
-  }
+    setEditingIndex(index);
+  };
 
-  const handleDelete = (index: number) => {
-    setTasks((prev) => prev.filter((_, i) => i !== index))
-    if (editingIndex === index) setEditingIndex(null)
+  const handleDelete = async (index: number) => {
+  const taskToDelete = tasks[index];
+  if (!taskToDelete) return;
+
+  const res = await fetch(`/api/tasks/${taskToDelete.id}`, {
+    method: "DELETE",
+  });
+
+  if (res.ok) {
+    setTasks((prev) => prev.filter((_, i) => i !== index));
+    if (editingIndex === index) setEditingIndex(null);
+  } else {
+    const err = await res.json();
+    console.error("Errore DELETE:", err);
   }
+};
 
   return (
     <main className="max-w-xl mx-auto p-6">
@@ -40,11 +87,7 @@ export default function Home() {
         onCancelEdit={() => setEditingIndex(null)}
       />
 
-      <TaskList
-        tasks={tasks}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <TaskList tasks={tasks} onEdit={handleEdit} onDelete={handleDelete} />
     </main>
-  )
+  );
 }

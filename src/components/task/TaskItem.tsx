@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Task } from "./TaskForm"
+import { Task } from "@/lib/validation/task"
 
 interface TaskItemProps {
   task: Task

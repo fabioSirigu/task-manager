@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import {
+  createTaskSchema,
+  fullTaskSchema,
+  NewTask,
+  Task,
+} from "@/lib/validation/task";
+
 import {
   Select,
   SelectTrigger,
@@ -13,16 +19,8 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-const taskSchema = z.object({
-  title: z.string().min(1, "Il titolo è obbligatorio"),
-  description: z.string().optional(),
-  status: z.enum(["pending", "in progress", "done"]),
-});
-
-export type Task = z.infer<typeof taskSchema>;
-
 interface TaskFormProps {
-  onAddTask: (task: Task) => void;
+  onAddTask: (task: NewTask) => void;
   onUpdateTask?: (task: Task) => void;
   initialData?: Task | null;
   onCancelEdit?: () => void;
@@ -34,10 +32,10 @@ export const TaskForm = ({
   initialData,
   onCancelEdit,
 }: TaskFormProps) => {
-  const [formData, setFormData] = useState<Task>({
+  const [formData, setFormData] = useState<NewTask>({
     title: "",
     description: "",
-    status: "pending",
+    status: "PENDING",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Task, string>>>({});
@@ -45,6 +43,8 @@ export const TaskForm = ({
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
+    } else {
+      setFormData({ title: "", description: "", status: "PENDING" });
     }
   }, [initialData]);
 
@@ -56,25 +56,29 @@ export const TaskForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const result = taskSchema.safeParse(formData);
+    if (initialData) {
+      const taskToUpdate = { ...formData, id: initialData.id };
 
-    if (!result.success) {
-      const fieldErrors: Partial<Record<keyof Task, string>> = {};
-      result.error.errors.forEach((err) => {
-        const field = err.path[0] as keyof Task;
-        fieldErrors[field] = err.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
+      const result = fullTaskSchema.safeParse(taskToUpdate);
 
-    if (initialData && onUpdateTask) {
-      onUpdateTask(result.data);
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
+
+      onUpdateTask?.(result.data);
     } else {
+      const result = createTaskSchema.safeParse(formData);
+
+      if (!result.success) {
+        console.error(result.error);
+        return;
+      }
+
       onAddTask(result.data);
     }
 
-    setFormData({ title: "", description: "", status: "pending" });
+    setFormData({ title: "", description: "", status: "PENDING" });
     setErrors({});
   };
 
@@ -88,7 +92,7 @@ export const TaskForm = ({
       {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
 
       <Textarea
-        placeholder="Descrizione (opzionale)"
+        placeholder="Descrizione"
         value={formData.description}
         onChange={(e) => handleChange("description", e.target.value)}
       />
@@ -101,9 +105,9 @@ export const TaskForm = ({
           <SelectValue placeholder="Stato" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="pending">In attesa</SelectItem>
-          <SelectItem value="in progress">In corso</SelectItem>
-          <SelectItem value="done">Completato</SelectItem>
+          <SelectItem value="PENDING">In attesa</SelectItem>
+          <SelectItem value="IN_PROGRESS">In corso</SelectItem>
+          <SelectItem value="DONE">Completato</SelectItem>
         </SelectContent>
       </Select>
 

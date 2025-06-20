@@ -1,4 +1,4 @@
-import { Task } from "./TaskForm";
+import { Task } from "@/lib/validation/task"
 import { TaskItem } from "./TaskItem";
 
 interface TaskListProps {

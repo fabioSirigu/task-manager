@@ -1,71 +1,34 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { z } from "zod";
-
-const taskSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().optional(),
-  status: z.enum(["PENDING", "IN_PROGRESS", "DONE"]),
-});
+import { createTaskSchema } from "@/lib/validation/task";
 
 export async function GET() {
-  const tasks = await prisma.task.findMany();
-  return NextResponse.json(tasks);
+  try {
+    const tasks = await prisma.task.findMany();
+    return NextResponse.json(tasks);
+  } catch (error) {
+    console.error("Errore nel recupero dei task:", error);
+    return new NextResponse("Errore del server", { status: 500 });
+  }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = await request.json();
-    const data = taskSchema.parse(json);
+    const body = await req.json()
+
+    const result = createTaskSchema.safeParse(body)
+
+    if (!result.success) {
+      return NextResponse.json({ errors: result.error.flatten() }, { status: 400 })
+    }
 
     const newTask = await prisma.task.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        status: data.status,
-      },
-    });
+      data: result.data,
+    })
 
-    return NextResponse.json(newTask, { status: 201 });
+    return NextResponse.json(newTask, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
-  }
-}
-
-export async function PUT(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-
-    if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
-
-    const json = await request.json();
-    const data = taskSchema.partial().parse(json); // partial per update parziale perchè magari sto aggiornando solo un valore e non tutti
-
-    const updatedTask = await prisma.task.update({
-      where: { id: Number(id) },
-      data,
-    });
-
-    return NextResponse.json(updatedTask);
-  } catch (error) {
-    return NextResponse.json({ error: "Update failed" }, { status: 400 });
-  }
-}
-
-export async function DELETE(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-
-    if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
-
-    await prisma.task.delete({
-      where: { id: Number(id) },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: "Delete failed" }, { status: 400 });
+    console.error("Errore nella creazione del task:", error)
+    return new NextResponse("Errore del server", { status: 500 })
   }
 }
