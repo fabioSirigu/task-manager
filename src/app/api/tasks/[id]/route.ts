@@ -3,8 +3,10 @@ import prisma from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { createTaskSchema } from "@/lib/validation/task"
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
+export async function PUT(req: NextRequest) {
+   const url = new URL(req.url);
+  const idStr = url.pathname.split("/").pop(); // prende l'id da /api/tasks/123
+  const id = Number(idStr);
 
   if (isNaN(id)) {
     return NextResponse.json({ error: "ID non valido" }, { status: 400 })
