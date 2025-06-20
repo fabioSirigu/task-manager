@@ -92,7 +92,7 @@ export const TaskForm = ({
       {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
 
       <Textarea
-        placeholder="Descrizione"
+        placeholder="Descrizione - (Opzionale)"
         value={formData.description}
         onChange={(e) => handleChange("description", e.target.value)}
       />
