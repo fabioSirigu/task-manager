@@ -24,7 +24,7 @@ export const UserNav = () => {
 
   return (
     <div className="flex justify-end mb-4">
-      <UserButton /> {/* da fixare con i middleware */}
+      <UserButton showName />
     </div>
   );
 };
