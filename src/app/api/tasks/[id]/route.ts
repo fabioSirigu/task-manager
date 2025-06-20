@@ -30,21 +30,21 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = Number(params.id)
+export async function DELETE(req: NextRequest) {
+  const url = new URL(req.url);
+  const idStr = url.pathname.split("/").pop(); // prende l'id da /api/tasks/123
+  const id = Number(idStr);
 
   if (isNaN(id)) {
-    return NextResponse.json({ error: "ID non valido" }, { status: 400 })
+    return NextResponse.json({ error: "ID non valido" }, { status: 400 });
   }
 
   try {
-    await prisma.task.delete({ where: { id } })
-    return NextResponse.json({ message: "Task eliminato con successo" })
+    await prisma.task.delete({ where: { id } });
+    return NextResponse.json({ message: "Task eliminato con successo" });
   } catch (error) {
-    console.error("❌ Errore nella DELETE:", error)
-    return NextResponse.json({ error: "Task non trovato o errore interno" }, { status: 500 })
+    console.error("❌ Errore nella DELETE:", error);
+    return NextResponse.json({ error: "Task non trovato o errore interno" }, { status: 500 });
   }
 }
+
