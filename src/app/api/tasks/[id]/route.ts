@@ -1,52 +1,51 @@
 // app/api/tasks/[id]/route.ts
-import prisma from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
-import { createTaskSchema } from "@/lib/validation/task"
+import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { createTaskSchema } from '@/lib/validation/task';
 
 export async function PUT(req: NextRequest) {
-   const url = new URL(req.url);
-  const idStr = url.pathname.split("/").pop(); // prende l'id da /api/tasks/123
+  const url = new URL(req.url);
+  const idStr = url.pathname.split('/').pop(); // prende l'id da /api/tasks/123
   const id = Number(idStr);
 
   if (isNaN(id)) {
-    return NextResponse.json({ error: "ID non valido" }, { status: 400 })
+    return NextResponse.json({ error: 'ID non valido' }, { status: 400 });
   }
 
-  const body = await req.json()
-  const parsed = createTaskSchema.safeParse(body)
+  const body = await req.json();
+  const parsed = createTaskSchema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
   try {
     const task = await prisma.task.update({
       where: { id },
       data: parsed.data,
-    })
+    });
 
-    return NextResponse.json(task)
+    return NextResponse.json(task);
   } catch (error) {
-    console.error("❌ Errore nella PUT:", error)
-    return NextResponse.json({ error: "Task non trovato o errore interno" }, { status: 500 })
+    console.error('❌ Errore nella PUT:', error);
+    return NextResponse.json({ error: 'Task non trovato o errore interno' }, { status: 500 });
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);
-  const idStr = url.pathname.split("/").pop(); // prende l'id da /api/tasks/123
+  const idStr = url.pathname.split('/').pop(); // prende l'id da /api/tasks/123
   const id = Number(idStr);
 
   if (isNaN(id)) {
-    return NextResponse.json({ error: "ID non valido" }, { status: 400 });
+    return NextResponse.json({ error: 'ID non valido' }, { status: 400 });
   }
 
   try {
     await prisma.task.delete({ where: { id } });
-    return NextResponse.json({ message: "Task eliminato con successo" });
+    return NextResponse.json({ message: 'Task eliminato con successo' });
   } catch (error) {
-    console.error("❌ Errore nella DELETE:", error);
-    return NextResponse.json({ error: "Task non trovato o errore interno" }, { status: 500 });
+    console.error('❌ Errore nella DELETE:', error);
+    return NextResponse.json({ error: 'Task non trovato o errore interno' }, { status: 500 });
   }
 }
-

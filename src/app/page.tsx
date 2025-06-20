@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { TaskForm } from "@/components/task/TaskForm";
-import { TaskList } from "@/components/task/TaskList";
-import { Task } from "@/lib/validation/task";
-import { UserNav } from "@/components/ui/login";
+import { useEffect, useState } from 'react';
+import { TaskForm } from '@/components/task/TaskForm';
+import { TaskList } from '@/components/task/TaskList';
+import { Task } from '@/lib/validation/task';
+import { UserNav } from '@/components/ui/login';
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -14,15 +14,15 @@ export default function Home() {
   }, []);
 
   const loadTasks = async () => {
-    const res = await fetch("/api/tasks");
+    const res = await fetch('/api/tasks');
     const data = await res.json();
     setTasks(data);
   };
 
-  const handleAddTask = async (task: Omit<Task, "id">) => {
-    const res = await fetch("/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+  const handleAddTask = async (task: Omit<Task, 'id'>) => {
+    const res = await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task),
     });
 
@@ -31,7 +31,7 @@ export default function Home() {
       setTasks((prev) => [...prev, newTask]);
     } else {
       const err = await res.json();
-      console.error("Errore POST:", err);
+      console.error('Errore POST:', err);
     }
   };
 
@@ -40,19 +40,17 @@ export default function Home() {
     const id = tasks[editingIndex].id;
 
     const res = await fetch(`/api/tasks/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedTask),
     });
 
     if (res.ok) {
       const saved = await res.json();
-      setTasks((prev) =>
-        prev.map((task, i) => (i === editingIndex ? saved : task))
-      );
+      setTasks((prev) => prev.map((task, i) => (i === editingIndex ? saved : task)));
       setEditingIndex(null);
     } else {
-      console.error("Errore durante l’aggiornamento", await res.json());
+      console.error('Errore durante l’aggiornamento', await res.json());
     }
   };
 
@@ -61,21 +59,21 @@ export default function Home() {
   };
 
   const handleDelete = async (index: number) => {
-  const taskToDelete = tasks[index];
-  if (!taskToDelete) return;
+    const taskToDelete = tasks[index];
+    if (!taskToDelete) return;
 
-  const res = await fetch(`/api/tasks/${taskToDelete.id}`, {
-    method: "DELETE",
-  });
+    const res = await fetch(`/api/tasks/${taskToDelete.id}`, {
+      method: 'DELETE',
+    });
 
-  if (res.ok) {
-    setTasks((prev) => prev.filter((_, i) => i !== index));
-    if (editingIndex === index) setEditingIndex(null);
-  } else {
-    const err = await res.json();
-    console.error("Errore DELETE:", err);
-  }
-};
+    if (res.ok) {
+      setTasks((prev) => prev.filter((_, i) => i !== index));
+      if (editingIndex === index) setEditingIndex(null);
+    } else {
+      const err = await res.json();
+      console.error('Errore DELETE:', err);
+    }
+  };
 
   return (
     <main className="max-w-xl mx-auto p-6">

@@ -1,15 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  createTaskSchema,
-  fullTaskSchema,
-  NewTask,
-  Task,
-} from "@/lib/validation/task";
+import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { createTaskSchema, fullTaskSchema, NewTask, Task } from '@/lib/validation/task';
 
 import {
   Select,
@@ -17,7 +12,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface TaskFormProps {
   onAddTask: (task: NewTask) => void;
@@ -26,16 +21,11 @@ interface TaskFormProps {
   onCancelEdit?: () => void;
 }
 
-export const TaskForm = ({
-  onAddTask,
-  onUpdateTask,
-  initialData,
-  onCancelEdit,
-}: TaskFormProps) => {
+export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }: TaskFormProps) => {
   const [formData, setFormData] = useState<NewTask>({
-    title: "",
-    description: "",
-    status: "PENDING",
+    title: '',
+    description: '',
+    status: 'PENDING',
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Task, string>>>({});
@@ -44,7 +34,7 @@ export const TaskForm = ({
     if (initialData) {
       setFormData(initialData);
     } else {
-      setFormData({ title: "", description: "", status: "PENDING" });
+      setFormData({ title: '', description: '', status: 'PENDING' });
     }
   }, [initialData]);
 
@@ -78,7 +68,7 @@ export const TaskForm = ({
       onAddTask(result.data);
     }
 
-    setFormData({ title: "", description: "", status: "PENDING" });
+    setFormData({ title: '', description: '', status: 'PENDING' });
     setErrors({});
   };
 
@@ -87,20 +77,17 @@ export const TaskForm = ({
       <Input
         placeholder="Titolo"
         value={formData.title}
-        onChange={(e) => handleChange("title", e.target.value)}
+        onChange={(e) => handleChange('title', e.target.value)}
       />
       {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
 
       <Textarea
         placeholder="Descrizione - (Opzionale)"
         value={formData.description}
-        onChange={(e) => handleChange("description", e.target.value)}
+        onChange={(e) => handleChange('description', e.target.value)}
       />
 
-      <Select
-        value={formData.status}
-        onValueChange={(value) => handleChange("status", value)}
-      >
+      <Select value={formData.status} onValueChange={(value) => handleChange('status', value)}>
         <SelectTrigger>
           <SelectValue placeholder="Stato" />
         </SelectTrigger>
@@ -112,9 +99,7 @@ export const TaskForm = ({
       </Select>
 
       <div className="flex gap-2">
-        <Button type="submit">
-          {initialData ? "Salva modifiche" : "Aggiungi Task"}
-        </Button>
+        <Button type="submit">{initialData ? 'Salva modifiche' : 'Aggiungi Task'}</Button>
         {initialData && (
           <Button type="button" variant="outline" onClick={onCancelEdit}>
             Annulla

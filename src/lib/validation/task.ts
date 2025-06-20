@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const createTaskSchema = z.object({
-  title: z.string().min(1, "Titolo Obbligatorio"),
+  title: z.string().min(1, 'Titolo Obbligatorio'),
   description: z.string().optional(),
-  status: z.enum(["PENDING", "IN_PROGRESS", "DONE"]),
+  status: z.enum(['PENDING', 'IN_PROGRESS', 'DONE']),
 });
 
 export const fullTaskSchema = createTaskSchema.extend({

@@ -1,5 +1,5 @@
-import { Task } from "@/lib/validation/task"
-import { TaskItem } from "./TaskItem";
+import { Task } from '@/lib/validation/task';
+import { TaskItem } from './TaskItem';
 
 interface TaskListProps {
   tasks: Task[];
@@ -15,12 +15,12 @@ export const TaskList = ({ tasks, onEdit, onDelete }: TaskListProps) => {
   return (
     <ul className="space-y-4">
       {tasks.map((task, index) => (
-          <TaskItem
-            key={index}
-            task={task}
-            onEdit={() => onEdit(index)}
-            onDelete={() => onDelete(index)}
-          />
+        <TaskItem
+          key={index}
+          task={task}
+          onEdit={() => onEdit(index)}
+          onDelete={() => onDelete(index)}
+        />
       ))}
     </ul>
   );

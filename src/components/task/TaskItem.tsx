@@ -1,11 +1,11 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Task } from "@/lib/validation/task"
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Task } from '@/lib/validation/task';
 
 interface TaskItemProps {
-  task: Task
-  onEdit: () => void
-  onDelete: () => void
+  task: Task;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 export const TaskItem = ({ task, onEdit, onDelete }: TaskItemProps) => {
@@ -15,9 +15,7 @@ export const TaskItem = ({ task, onEdit, onDelete }: TaskItemProps) => {
         <h3 className="font-semibold text-lg">{task.title}</h3>
         <Badge variant="outline">{task.status}</Badge>
       </div>
-      {task.description && (
-        <p className="text-sm text-gray-700">{task.description}</p>
-      )}
+      {task.description && <p className="text-sm text-gray-700">{task.description}</p>}
       <div className="flex gap-2 pt-2">
         <Button variant="secondary" onClick={onEdit}>
           Modifica
@@ -27,5 +25,5 @@ export const TaskItem = ({ task, onEdit, onDelete }: TaskItemProps) => {
         </Button>
       </div>
     </li>
-  )
-}
+  );
+};
