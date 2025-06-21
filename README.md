@@ -2,7 +2,45 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dep
+
+```bash
+npm install
+# or
+yarn
+# or
+pnpm install
+```
+
+
+### 2.Setup env variables
+
+Create a .env.local file in the root folder with your Clerk keys and URLs:
+
+```bash
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/
+```
+
+### 3. Setup Prisma and database
+
+Run the following command to create the SQLite database file and generate the Prisma client:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+This will:
+create dev.db SQLite file
+apply the schema from prisma/schema.prisma
+generate the Prisma client for your app
+
+## 4. Now, run the development server:
 
 ```bash
 npm run dev
@@ -34,3 +72,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
