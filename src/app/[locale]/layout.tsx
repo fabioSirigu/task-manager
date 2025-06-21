@@ -5,6 +5,12 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { routing } from '@/i18n/routing';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Testudo Task Manager',
+  description: 'Task Manager by Fabio Sirigu for Testudo.'
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
