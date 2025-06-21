@@ -1,5 +1,6 @@
 import { Task } from '@/lib/validation/task';
 import { TaskItem } from './TaskItem';
+import { useTranslations } from 'next-intl';
 
 interface TaskListProps {
   tasks: Task[];
@@ -8,8 +9,9 @@ interface TaskListProps {
 }
 
 export const TaskList = ({ tasks, onEdit, onDelete }: TaskListProps) => {
+  const t = useTranslations('home');
   if (tasks.length === 0) {
-    return <p className="text-gray-500">Nessun task ancora aggiunto.</p>;
+    return <p className="text-gray-500">{t('emptyList')}</p>;
   }
 
   return (

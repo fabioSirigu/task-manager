@@ -5,10 +5,13 @@ import { TaskForm } from '@/ui/task/TaskForm';
 import { TaskList } from '@/ui/task/TaskList';
 import { Task } from '@/lib/validation/task';
 import { UserNav } from '@/ui/login';
+import { useTranslations } from 'next-intl';
 
 export default function Page() {
+  const t = useTranslations('home');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
   useEffect(() => {
     loadTasks();
   }, []);
@@ -68,7 +71,9 @@ export default function Page() {
 
     if (res.ok) {
       setTasks((prev) => prev.filter((_, i) => i !== index));
-      if (editingIndex === index) setEditingIndex(null);
+      if (editingIndex === index) {
+        setEditingIndex(null);
+      }
     } else {
       const err = await res.json();
       console.error('Errore DELETE:', err);
@@ -78,7 +83,7 @@ export default function Page() {
   return (
     <main className="max-w-xl mx-auto p-6">
       <UserNav />
-      <h1 className="text-2xl font-bold mb-4">La tua To-Do List</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
 
       <TaskForm
         onAddTask={handleAddTask}

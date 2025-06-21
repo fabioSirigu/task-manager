@@ -1,0 +1,27 @@
+{
+  "home": {
+    "title": "Task Manager - Testudo",
+    "form": {
+      "title": "Title",
+      "description": "Description",
+      "status": {
+        "pending": "Pending",
+        "in_progress": "In progress",
+        "done": "Completed"
+      }
+    },
+    "emptyList": "No tasks added yet."
+  },
+  "errors": {
+    "errorTitle": "Title required"
+  },
+  "commons": {
+    "buttons": {
+      "addTask": "Add Task",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete"
+    }
+  }
+}

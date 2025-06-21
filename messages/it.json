@@ -1,0 +1,27 @@
+{
+  "home": {
+    "title": "Task Manager - Testudo",
+    "form": {
+      "title": "Titolo",
+      "description": "Descrizione",
+      "status": {
+        "pending": "In attesa",
+        "in_progress": "In corso",
+        "done": "Completato"
+      }
+    },
+    "emptyList": "Nessun task ancora aggiunto."
+  },
+  "errors": {
+    "errorTitle": "Titolo obbligatorio"
+  },
+  "commons": {
+    "buttons": {
+      "addTask": "Aggiungi Task",
+      "edit": "Modifica",
+      "cancel": "Annulla",
+      "save": "Salva",
+      "delete": "Elimina"
+    }
+  }
+}

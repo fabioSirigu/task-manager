@@ -6,13 +6,8 @@ import { Textarea } from '@/ui/textarea';
 import { Button } from '@/ui/button';
 import { createTaskSchema, fullTaskSchema, NewTask, Task } from '@/lib/validation/task';
 
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/ui/select';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/ui/select';
+import { useTranslations } from 'next-intl';
 
 interface TaskFormProps {
   onAddTask: (task: NewTask) => void;
@@ -22,6 +17,8 @@ interface TaskFormProps {
 }
 
 export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }: TaskFormProps) => {
+  const t = useTranslations('');
+
   const [formData, setFormData] = useState<NewTask>({
     title: '',
     description: '',
@@ -52,7 +49,13 @@ export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }:
       const result = fullTaskSchema.safeParse(taskToUpdate);
 
       if (!result.success) {
-        console.error(result.error);
+        const fieldErrors: Partial<Record<keyof Task, string>> = {};
+        result.error.errors.forEach((err) => {
+          const field = err.path[0] as keyof Task;
+          fieldErrors[field] = err.message;
+        });
+        console.log('🚀 ~ handleSubmit ~ fieldErrors:', fieldErrors);
+        setErrors(fieldErrors);
         return;
       }
 
@@ -61,7 +64,13 @@ export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }:
       const result = createTaskSchema.safeParse(formData);
 
       if (!result.success) {
-        console.error(result.error);
+        const fieldErrors: Partial<Record<keyof Task, string>> = {};
+        result.error.errors.forEach((err) => {
+          const field = err.path[0] as keyof Task;
+          fieldErrors[field] = err.message;
+        });
+        console.log('🚀 ~ handleSubmit ~ fieldErrors:', fieldErrors);
+        setErrors(fieldErrors);
         return;
       }
 
@@ -75,14 +84,15 @@ export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }:
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mb-6">
       <Input
-        placeholder="Titolo"
+        placeholder={t(`home.form.title`)}
         value={formData.title}
         onChange={(e) => handleChange('title', e.target.value)}
       />
-      {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
+
+      {errors.title && <p className="text-sm text-red-500">{t(`errors.${errors.title}`)}</p>}
 
       <Textarea
-        placeholder="Descrizione - (Opzionale)"
+        placeholder={t(`home.form.description`)}
         value={formData.description}
         onChange={(e) => handleChange('description', e.target.value)}
       />
@@ -92,17 +102,19 @@ export const TaskForm = ({ onAddTask, onUpdateTask, initialData, onCancelEdit }:
           <SelectValue placeholder="Stato" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="PENDING">In attesa</SelectItem>
-          <SelectItem value="IN_PROGRESS">In corso</SelectItem>
-          <SelectItem value="DONE">Completato</SelectItem>
+          <SelectItem value="PENDING">{t(`home.form.status.pending`)}</SelectItem>
+          <SelectItem value="IN_PROGRESS">{t(`home.form.status.in_progress`)}</SelectItem>
+          <SelectItem value="DONE">{t(`home.form.status.done`)}</SelectItem>
         </SelectContent>
       </Select>
 
       <div className="flex gap-2">
-        <Button type="submit">{initialData ? 'Salva modifiche' : 'Aggiungi Task'}</Button>
+        <Button type="submit">
+          {t(initialData ? 'commons.buttons.save' : 'commons.buttons.addTask')}
+        </Button>
         {initialData && (
           <Button type="button" variant="outline" onClick={onCancelEdit}>
-            Annulla
+            {t(`commons.buttons.cancel`)}
           </Button>
         )}
       </div>
