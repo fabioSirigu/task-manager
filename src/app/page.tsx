@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { TaskForm } from '@/components/task/TaskForm';
-import { TaskList } from '@/components/task/TaskList';
+import { TaskForm } from '@/ui/task/TaskForm';
+import { TaskList } from '@/ui/task/TaskList';
 import { Task } from '@/lib/validation/task';
-import { UserNav } from '@/components/ui/login';
+import { UserNav } from '@/ui/login';
 
-export default function Home() {
+export default function Page() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   useEffect(() => {

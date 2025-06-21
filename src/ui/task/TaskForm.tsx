@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/ui/input';
+import { Textarea } from '@/ui/textarea';
+import { Button } from '@/ui/button';
 import { createTaskSchema, fullTaskSchema, NewTask, Task } from '@/lib/validation/task';
 
 import {
@@ -12,7 +12,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/select';
+} from '@/ui/select';
 
 interface TaskFormProps {
   onAddTask: (task: NewTask) => void;
