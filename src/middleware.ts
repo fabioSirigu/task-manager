@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import Negotiator from 'negotiator';
 import { match } from '@formatjs/intl-localematcher';
-import { locales, defaultLocale } from '../i18n';
+import { routing } from './i18n/routing';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
+const {locales, defaultLocale} = routing
 const publicRoutes = ['/sign-in(.*)', '/sign-up(.*)'];
 const localizedPublicRoutes = locales.flatMap((locale) =>
   publicRoutes.map((route) => `/${locale}${route}`),

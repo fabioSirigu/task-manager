@@ -35,11 +35,13 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  const messages = (await import(`../../../messages/${locale}.json`)).default;
+
   return (
     <ClerkProvider>
       <html lang={locale}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>{children}</NextIntlClientProvider>
         </body>
       </html>
     </ClerkProvider>
